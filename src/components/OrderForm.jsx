@@ -19,7 +19,7 @@ const MALZEMELER = [
 
 export default function OrderForm({ onSuccess }) {
   const [form, setForm] = useState({
-    boyut: "", // S M L gibi
+    boyut: "", 
     hamur: "",
     malzemeler: [],
     not: "",
@@ -79,7 +79,7 @@ export default function OrderForm({ onSuccess }) {
     };
 
     try {
-      // reqres.in’de 401 yememek için doğru endpoint:
+     
       const res = await axios.post("https://reqres.in/api/users", payload, {
         headers: { "Content-Type": "application/json" },
       });
