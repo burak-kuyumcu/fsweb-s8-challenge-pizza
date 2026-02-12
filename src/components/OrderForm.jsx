@@ -17,7 +17,18 @@ const MALZEMELER = [
   "Kabak",
 ];
 
-export default function OrderForm() {
+const slugify = (s) =>
+  s
+    .toLowerCase()
+    .replaceAll("ı", "i")
+    .replaceAll("ş", "s")
+    .replaceAll("ğ", "g")
+    .replaceAll("ü", "u")
+    .replaceAll("ö", "o")
+    .replaceAll("ç", "c")
+    .replaceAll(" ", "-");
+
+export default function OrderForm({ onSuccess }) {
   const [form, setForm] = useState({
     isim: "",
     boyut: "",
@@ -27,6 +38,7 @@ export default function OrderForm() {
   });
 
   const [submitting, setSubmitting] = useState(false);
+  const [adet, setAdet] = useState(1); 
 
   const errors = useMemo(() => {
     const e = {};
@@ -42,6 +54,7 @@ export default function OrderForm() {
   }, [form]);
 
   const isValid = Object.keys(errors).length === 0;
+
   const onChange = (e) => {
     const { name, value } = e.target;
     setForm((p) => ({ ...p, [name]: value }));
@@ -53,9 +66,38 @@ export default function OrderForm() {
       const next = checked
         ? p.malzemeler.filter((m) => m !== malzeme)
         : [...p.malzemeler, malzeme];
-
       return { ...p, malzemeler: next };
     });
+  };
+
+  const basePrice = 85.5;
+  const ingredientPrice = 5;
+  const selectionsTotal = form.malzemeler.length * ingredientPrice;
+  const total = (basePrice + selectionsTotal) * adet;
+
+  const buildPayload = () => ({
+    isim: form.isim.trim(),
+    boyut: form.boyut,
+    hamur: form.hamur,
+    malzemeler: form.malzemeler,
+    ozel: form.not,
+    adet,
+  });
+
+  const buildFakeResponse = () => ({
+    id: (globalThis.crypto?.randomUUID?.() ?? String(Date.now())),
+    createdAt: new Date().toISOString(),
+  });
+
+  const resetForm = () => {
+    setForm({
+      isim: "",
+      boyut: "",
+      hamur: "",
+      malzemeler: [],
+      not: "",
+    });
+    setAdet(1);
   };
 
   const onSubmit = async (e) => {
@@ -63,158 +105,195 @@ export default function OrderForm() {
     if (!isValid || submitting) return;
 
     setSubmitting(true);
-    try {
-      const payload = {
-        isim: form.isim.trim(),
-        boyut: form.boyut,
-        hamur: form.hamur,
-        malzemeler: form.malzemeler,
-        ozel: form.not,
-      };
+    const payload = buildPayload();
 
+    try {
       const res = await axios.post("https://reqres.in/api/pizza", payload, {
         headers: {
-          "x-api-key": "reqres-free-v1",
           "Content-Type": "application/json",
+          "x-api-key": "reqres-free-v1",
         },
       });
 
       console.log("API Yanıtı:", res.data);
-      console.log("Sipariş Özeti:", {
-        id: res.data.id,
-        createdAt: res.data.createdAt,
-        ...payload,
-      });
+      console.log("Sipariş Özeti:", { ...payload, ...res.data });
 
-      setForm({
-        isim: "",
-        boyut: "",
-        hamur: "",
-        malzemeler: [],
-        not: "",
-      });
+      onSuccess?.({ payload, response: res.data, mocked: false });
+      resetForm();
     } catch (err) {
-      console.error("Sipariş gönderilemedi:", err);
+      console.error("Sipariş gönderilemedi (API):", err);
+
+      const fakeResponse = buildFakeResponse();
+      console.log("Mock yanıt üretildi:", fakeResponse);
+      console.log("Sipariş Özeti (Mock):", { ...payload, ...fakeResponse });
+
+      onSuccess?.({ payload, response: fakeResponse, mocked: true });
+      resetForm();
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={onSubmit} style={{ maxWidth: 700, margin: "40px auto" }}>
-      <h1>Pizza Siparişi</h1>
+    <form className="order-form" onSubmit={onSubmit}>
+      <h2 className="order-form__title">Pizza Siparişi</h2>
 
-      <label style={{ display: "block", marginTop: 16 }}>
-        İsim *
+
+      <div className="field">
+        <label className="label" htmlFor="isim">
+          İsim <span className="req">*</span>
+        </label>
         <input
+          id="isim"
+          data-cy="name-input"
+          className="input"
           name="isim"
           value={form.isim}
           onChange={onChange}
           minLength={3}
           required
           placeholder="Adınız"
-          style={{ width: "100%", padding: 10, marginTop: 6 }}
         />
-      </label>
-      {errors.isim && <p style={{ color: "crimson" }}>{errors.isim}</p>}
+        {errors.isim && <p className="error">{errors.isim}</p>}
+      </div>
 
-      <fieldset style={{ marginTop: 16 }}>
-        <legend>Boyut Seç *</legend>
-        {["Küçük", "Orta", "Büyük"].map((b) => (
-          <label key={b} style={{ display: "block", marginTop: 6 }}>
-            <input
-              type="radio"
-              name="boyut"
-              value={b}
-              checked={form.boyut === b}
-              onChange={onChange}
-              required
-            />{" "}
-            {b}
+
+      <div className="row-2">
+        <fieldset className="field fieldset">
+          <legend className="label">
+            Boyut Seç <span className="req">*</span>
+          </legend>
+
+          {["Küçük", "Orta", "Büyük"].map((b) => (
+            <label key={b} className="radio">
+              <input
+                type="radio"
+                name="boyut"
+                value={b}
+                checked={form.boyut === b}
+                onChange={onChange}
+                required
+              />
+              <span>{b}</span>
+            </label>
+          ))}
+
+          {errors.boyut && <p className="error">{errors.boyut}</p>}
+        </fieldset>
+
+        <div className="field">
+          <label className="label" htmlFor="hamur">
+            Hamur Seç <span className="req">*</span>
           </label>
-        ))}
-      </fieldset>
-      {errors.boyut && <p style={{ color: "crimson" }}>{errors.boyut}</p>}
+          <select
+            id="hamur"
+            className="select"
+            name="hamur"
+            value={form.hamur}
+            onChange={onChange}
+            required
+          >
+            <option value="">Hamur Kalınlığı</option>
+            <option value="İnce">İnce</option>
+            <option value="Orta">Orta</option>
+            <option value="Kalın">Kalın</option>
+          </select>
+          {errors.hamur && <p className="error">{errors.hamur}</p>}
+        </div>
+      </div>
 
-      <label style={{ display: "block", marginTop: 16 }}>
-        Hamur Seç *
-        <select
-          name="hamur"
-          value={form.hamur}
-          onChange={onChange}
-          required
-          style={{ width: "100%", padding: 10, marginTop: 6 }}
-        >
-          <option value="">Seçiniz</option>
-          <option value="İnce">İnce</option>
-          <option value="Orta">Orta</option>
-          <option value="Kalın">Kalın</option>
-        </select>
-      </label>
-      {errors.hamur && <p style={{ color: "crimson" }}>{errors.hamur}</p>}
 
-      <div style={{ marginTop: 16 }}>
-        <h3>Ek Malzemeler</h3>
-        <p>En az 4, en fazla 10 seçim.</p>
+      <div className="field">
+        <h3 className="section-title">Ek Malzemeler</h3>
+        <p className="hint">En az 4, en fazla 10 seçim. (5₺)</p>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 10,
-          }}
-        >
+        <div className="ingredients">
           {MALZEMELER.map((m) => {
             const checked = form.malzemeler.includes(m);
             const disableNewCheck = !checked && form.malzemeler.length >= 10;
+            const slug = slugify(m);
 
             return (
-              <label key={m} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <label key={m} className="check">
                 <input
+                  data-cy={`ingredient-${slug}`}
                   type="checkbox"
                   checked={checked}
                   onChange={() => toggleMalzeme(m)}
                   disabled={disableNewCheck}
                 />
-                {m}
+                <span>{m}</span>
               </label>
             );
           })}
         </div>
 
-        {errors.malzemeler && <p style={{ color: "crimson" }}>{errors.malzemeler}</p>}
+        {errors.malzemeler && <p className="error">{errors.malzemeler}</p>}
       </div>
 
-      <label style={{ display: "block", marginTop: 16 }}>
-        Sipariş Notu
+      <div className="field">
+        <label className="label" htmlFor="not">
+          Sipariş Notu
+        </label>
         <textarea
+          id="not"
+          className="textarea"
           name="not"
           value={form.not}
           onChange={onChange}
-          placeholder="Eklemek istediğin bir not var mı?"
-          style={{ width: "100%", padding: 10, marginTop: 6, minHeight: 90 }}
+          placeholder="Siparişine eklemek istediğin bir not var mı?"
         />
-      </label>
+      </div>
 
-      <button
-        type="submit"
-        disabled={!isValid || submitting}
-        style={{
-          marginTop: 18,
-          width: "100%",
-          padding: 12,
-          border: 0,
-          cursor: !isValid || submitting ? "not-allowed" : "pointer",
-        }}
-      >
-        {submitting ? "Gönderiliyor..." : "SİPARİŞ VER"}
-      </button>
+   
+      <div className="order-bottom">
+        <div className="quantity">
+          <button
+            type="button"
+            className="qty-btn"
+            onClick={() => setAdet((a) => Math.max(1, a - 1))}
+          >
+            -
+          </button>
+          <span className="qty-val">{adet}</span>
+          <button
+            type="button"
+            className="qty-btn"
+            onClick={() => setAdet((a) => a + 1)}
+          >
+            +
+          </button>
+        </div>
 
-      {!isValid && (
-        <p style={{ marginTop: 10, color: "#5F5F5F" }}>
-          Form tamamlanmadan sipariş veremezsin.
-        </p>
-      )}
+        <aside className="order-form__right">
+          <h3 className="summary-title">Sipariş Toplamı</h3>
+
+          <div className="summary-row">
+            <span>Seçimler</span>
+            <span>{(selectionsTotal * adet).toFixed(2)}₺</span>
+          </div>
+
+          <div className="summary-row summary-total">
+            <span>Toplam</span>
+            <span>{total.toFixed(2)}₺</span>
+          </div>
+
+          <button
+            data-cy="submit-order"
+            className="submit-btn"
+            type="submit"
+            disabled={!isValid || submitting}
+          >
+            {submitting ? "Gönderiliyor..." : "SİPARİŞ VER"}
+          </button>
+
+          {!isValid && (
+            <p className="hint" style={{ marginTop: 10 }}>
+              Form tamamlanmadan sipariş veremezsin.
+            </p>
+          )}
+        </aside>
+      </div>
     </form>
   );
 }

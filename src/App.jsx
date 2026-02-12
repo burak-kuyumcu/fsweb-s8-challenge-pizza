@@ -5,6 +5,7 @@ import Footer from "./components/Footer.jsx";
 import OrderSuccess from "./components/OrderSuccess.jsx";
 import OrderForm from "./Components/OrderForm.jsx";
 import OrderHeader from "./components/OrderHeader.jsx";
+import ProductInfo from "./components/ProductInfo.jsx";
 import "./App.css";
 
 export default function App() {
@@ -32,17 +33,18 @@ export default function App() {
   if (page === "order") {
     return (
       <>
-        <OrderHeader />
-        <main className="page">
-          <OrderForm onSuccess={handleOrderSuccess} />
-        </main>
+         <OrderHeader />
+         <main className="page">
+         <ProductInfo />
+         <OrderForm onSuccess={handleOrderSuccess} />
+         </main>
       </>
     );
   }
 
   return (
     <>
-      <Success order={orderData} onBackHome={goHome} />
+      <OrderSuccess order={orderData} onBackHome={goHome} />
     </>
   );
 }
