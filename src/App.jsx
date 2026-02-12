@@ -3,7 +3,7 @@ import Header from "./components/Header.jsx";
 import Body from "./components/Body.jsx";
 import Footer from "./components/Footer.jsx";
 import OrderSuccess from "./components/OrderSuccess.jsx";
-import OrderForm from "./Components/OrderForm.jsx";
+import OrderForm from "./components/OrderForm.jsx";
 import OrderHeader from "./components/OrderHeader.jsx";
 import ProductInfo from "./components/ProductInfo.jsx";
 import "./App.css";
@@ -38,6 +38,7 @@ export default function App() {
          <ProductInfo />
          <OrderForm onSuccess={handleOrderSuccess} />
          </main>
+         <Footer />
       </>
     );
   }
