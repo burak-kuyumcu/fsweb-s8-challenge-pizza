@@ -1,4 +1,4 @@
-const Header = () => {
+const Header = ({ onStartOrder }) => {
   return (
     <header>
       <section className="aciklama">
@@ -14,7 +14,9 @@ const Header = () => {
             KOD ACIKTIRIR<br />
             PIZZA, DOYURUR
           </h1>
-          <button>ACIKTIM</button>
+           <button type="button" onClick={onStartOrder}>
+        ACIKTIM
+      </button>
         </div>
       </section>
 
