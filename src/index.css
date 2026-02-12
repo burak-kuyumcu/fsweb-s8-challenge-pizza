@@ -942,7 +942,7 @@ footer{
   width: min(320px, 100%);
 }
 
-/* Footer altta dursun (sayfa kısa olsa bile) */
+
 .app{
   min-height: 100vh;
   display: flex;
@@ -950,7 +950,7 @@ footer{
 }
 .app-main{ flex: 1; }
 
-/* Kırmızı üst bar */
+
 .orderTop{
   background:#CE2829;
   padding: 22px 16px;
@@ -964,7 +964,6 @@ footer{
   font-size: 42px;
 }
 
-/* Bej ürün alanı */
 .productHero{
   background:#F7F2EA;
   padding-bottom: 24px;
@@ -1015,7 +1014,7 @@ footer{
   line-height: 1.7;
 }
 
-/* Form alanı */
+
 .orderSection{
   background:#fff;
   padding: 26px 0 40px;

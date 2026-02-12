@@ -19,7 +19,7 @@ const MALZEMELER = [
 
 export default function OrderForm({ onSuccess }) {
   const [form, setForm] = useState({
-    boyut: "", 
+    boyut: "",
     hamur: "",
     malzemeler: [],
     not: "",
@@ -49,18 +49,49 @@ export default function OrderForm({ onSuccess }) {
   const total = (basePrice + selectionsTotal) * form.adet;
 
   const setSize = (s) => setForm((p) => ({ ...p, boyut: s }));
-  const onChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setForm((p) => ({ ...p, [name]: value }));
+  };
 
   const toggleMalzeme = (m) => {
     setForm((p) => {
       const checked = p.malzemeler.includes(m);
-      const next = checked ? p.malzemeler.filter((x) => x !== m) : [...p.malzemeler, m];
+      const next = checked
+        ? p.malzemeler.filter((x) => x !== m)
+        : [...p.malzemeler, m];
       return { ...p, malzemeler: next };
     });
   };
 
   const dec = () => setForm((p) => ({ ...p, adet: Math.max(1, p.adet - 1) }));
   const inc = () => setForm((p) => ({ ...p, adet: p.adet + 1 }));
+
+  const buildPayload = () => ({
+    boyut: form.boyut,
+    hamur: form.hamur,
+    malzemeler: form.malzemeler,
+    not: form.not,
+    adet: form.adet,
+    secimlerFiyati: selectionsTotal,
+    toplam: total,
+  });
+
+  const resetForm = () => {
+    setForm({
+      boyut: "",
+      hamur: "",
+      malzemeler: [],
+      not: "",
+      adet: 1,
+    });
+  };
+
+  const buildMockResponse = () => ({
+    id: String(Date.now()),
+    createdAt: new Date().toISOString(),
+  });
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -69,24 +100,22 @@ export default function OrderForm({ onSuccess }) {
     setSubmitting(true);
     setSubmitError("");
 
-    const payload = {
-      boyut: form.boyut,
-      hamur: form.hamur,
-      malzemeler: form.malzemeler,
-      ozel: form.not,
-      adet: form.adet,
-      toplam: total,
-    };
+    const payload = buildPayload();
 
     try {
-     
       const res = await axios.post("https://reqres.in/api/users", payload, {
         headers: { "Content-Type": "application/json" },
+        timeout: 8000, 
       });
 
       onSuccess?.({ payload, response: res.data, mocked: false });
+      resetForm();
     } catch (err) {
-      setSubmitError("İnternet'e bağlanılamadı veya istek başarısız oldu. Tekrar deneyin.");
+      const mock = buildMockResponse();
+      setSubmitError("Ağ hatası/CORS oldu. Mock yanıt ile devam edildi.");
+
+      onSuccess?.({ payload, response: mock, mocked: true });
+      resetForm();
     } finally {
       setSubmitting(false);
     }
@@ -125,7 +154,12 @@ export default function OrderForm({ onSuccess }) {
                 <span className="req">*</span>
               </div>
 
-              <select className="select2" name="hamur" value={form.hamur} onChange={onChange}>
+              <select
+                className="select2"
+                name="hamur"
+                value={form.hamur}
+                onChange={onChange}
+              >
                 <option value="">Hamur Kalınlığı Seç</option>
                 <option value="İnce">İnce</option>
                 <option value="Orta">Orta</option>
@@ -204,11 +238,17 @@ export default function OrderForm({ onSuccess }) {
 
           {submitError && <p className="err">{submitError}</p>}
 
-          <button className="orderBtn" type="submit" disabled={!isValid || submitting}>
+          <button
+            className="orderBtn"
+            type="submit"
+            disabled={!isValid || submitting}
+          >
             {submitting ? "Gönderiliyor..." : "SİPARİŞ VER"}
           </button>
 
-          {!isValid && <p className="miniHint">Form tamamlanmadan sipariş veremezsin.</p>}
+          {!isValid && (
+            <p className="miniHint">Form tamamlanmadan sipariş veremezsin.</p>
+          )}
         </aside>
       </form>
     </section>
