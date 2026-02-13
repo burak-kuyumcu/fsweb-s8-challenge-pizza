@@ -14,9 +14,9 @@ const Header = ({ onStartOrder }) => {
             KOD ACIKTIRIR<br />
             PIZZA, DOYURUR
           </h1>
-           <button type="button" onClick={onStartOrder}>
-        ACIKTIM
-      </button>
+         <button type="button" onClick={onStartOrder} data-cy="go-order">
+          ACIKTIM
+          </button>
         </div>
       </section>
 

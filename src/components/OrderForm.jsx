@@ -32,6 +32,18 @@ export default function OrderForm({ onSuccess }) {
   const basePrice = 85.5;
   const ingredientPrice = 5;
 
+  const cyKey = (s) =>
+    String(s)
+      .toLowerCase()
+      .trim()
+      .replaceAll("ı", "i")
+      .replaceAll("ğ", "g")
+      .replaceAll("ü", "u")
+      .replaceAll("ş", "s")
+      .replaceAll("ö", "o")
+      .replaceAll("ç", "c")
+      .replaceAll(" ", "-");
+
   const errors = useMemo(() => {
     const e = {};
     if (!form.boyut) e.boyut = "Boyut seçmelisin.";
@@ -105,7 +117,7 @@ export default function OrderForm({ onSuccess }) {
     try {
       const res = await axios.post("https://reqres.in/api/users", payload, {
         headers: { "Content-Type": "application/json" },
-        timeout: 8000, 
+        timeout: 8000,
       });
 
       onSuccess?.({ payload, response: res.data, mocked: false });
@@ -122,11 +134,16 @@ export default function OrderForm({ onSuccess }) {
   };
 
   return (
-    <section className="orderSection">
-      <form className="orderLayout" onSubmit={onSubmit}>
-        <div className="orderLeft">
+    <section className="orderSection" data-cy="order-section">
+      <form
+        className="orderLayout"
+        onSubmit={onSubmit}
+        data-cy="order-form"
+        noValidate
+      >
+        <div className="orderLeft" data-cy="order-left">
           <div className="rowTop">
-            <div className="block">
+            <div className="block" data-cy="size-block">
               <div className="labelRow">
                 <span className="labelText">Boyut Seç</span>
                 <span className="req">*</span>
@@ -137,6 +154,7 @@ export default function OrderForm({ onSuccess }) {
                   <button
                     key={s}
                     type="button"
+                    data-cy={`size-${s}`}
                     className={`pill ${form.boyut === s ? "isActive" : ""}`}
                     onClick={() => setSize(s)}
                     aria-pressed={form.boyut === s}
@@ -145,10 +163,15 @@ export default function OrderForm({ onSuccess }) {
                   </button>
                 ))}
               </div>
-              {errors.boyut && <p className="err">{errors.boyut}</p>}
+
+              {errors.boyut && (
+                <p className="err" data-cy="err-size">
+                  {errors.boyut}
+                </p>
+              )}
             </div>
 
-            <div className="block">
+            <div className="block" data-cy="dough-block">
               <div className="labelRow">
                 <span className="labelText">Hamur Seç</span>
                 <span className="req">*</span>
@@ -159,6 +182,7 @@ export default function OrderForm({ onSuccess }) {
                 name="hamur"
                 value={form.hamur}
                 onChange={onChange}
+                data-cy="dough-select"
               >
                 <option value="">Hamur Kalınlığı Seç</option>
                 <option value="İnce">İnce</option>
@@ -166,15 +190,19 @@ export default function OrderForm({ onSuccess }) {
                 <option value="Kalın">Kalın</option>
               </select>
 
-              {errors.hamur && <p className="err">{errors.hamur}</p>}
+              {errors.hamur && (
+                <p className="err" data-cy="err-dough">
+                  {errors.hamur}
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="block">
+          <div className="block" data-cy="ingredients-block">
             <h3 className="h3">Ek Malzemeler</h3>
             <p className="hint2">En fazla 10 malzeme seçebilirsiniz. 5₺</p>
 
-            <div className="gridChecks">
+            <div className="gridChecks" data-cy="ingredients-grid">
               {MALZEMELER.map((m) => {
                 const checked = form.malzemeler.includes(m);
                 const disableNew = !checked && form.malzemeler.length >= 10;
@@ -186,6 +214,7 @@ export default function OrderForm({ onSuccess }) {
                       checked={checked}
                       onChange={() => toggleMalzeme(m)}
                       disabled={disableNew}
+                      data-cy={`ing-${cyKey(m)}`}
                     />
                     <span className="box" aria-hidden="true" />
                     <span className="txt">{m}</span>
@@ -194,10 +223,14 @@ export default function OrderForm({ onSuccess }) {
               })}
             </div>
 
-            {errors.malzemeler && <p className="err">{errors.malzemeler}</p>}
+            {errors.malzemeler && (
+              <p className="err" data-cy="err-ings">
+                {errors.malzemeler}
+              </p>
+            )}
           </div>
 
-          <div className="block">
+          <div className="block" data-cy="note-block">
             <h3 className="h3">Sipariş Notu</h3>
             <input
               className="noteInput"
@@ -205,49 +238,73 @@ export default function OrderForm({ onSuccess }) {
               value={form.not}
               onChange={onChange}
               placeholder="Siparişine eklemek istediğin bir not var mı?"
+              data-cy="order-note"
             />
           </div>
 
           <div className="divider" />
 
-          <div className="bottomRow">
+          <div className="bottomRow" data-cy="qty-row">
             <div className="qty">
-              <button type="button" className="qtyBtn" onClick={dec}>
+              <button
+                type="button"
+                className="qtyBtn"
+                onClick={dec}
+                data-cy="qty-dec"
+              >
                 -
               </button>
-              <span className="qtyVal">{form.adet}</span>
-              <button type="button" className="qtyBtn" onClick={inc}>
+
+              <span className="qtyVal" data-cy="qty-val">
+                {form.adet}
+              </span>
+
+              <button
+                type="button"
+                className="qtyBtn"
+                onClick={inc}
+                data-cy="qty-inc"
+              >
                 +
               </button>
             </div>
           </div>
         </div>
 
-        <aside className="orderRight">
+        <aside className="orderRight" data-cy="order-summary">
           <h3 className="sumTitle">Sipariş Toplamı</h3>
 
           <div className="sumRow">
             <span>Seçimler</span>
-            <span>{(selectionsTotal * form.adet).toFixed(2)}₺</span>
+            <span data-cy="sum-selections">
+              {(selectionsTotal * form.adet).toFixed(2)}₺
+            </span>
           </div>
 
           <div className="sumRow totalRow">
             <span>Toplam</span>
-            <span>{total.toFixed(2)}₺</span>
+            <span data-cy="sum-total">{total.toFixed(2)}₺</span>
           </div>
 
-          {submitError && <p className="err">{submitError}</p>}
+          {submitError && (
+            <p className="err" data-cy="submit-error">
+              {submitError}
+            </p>
+          )}
 
           <button
             className="orderBtn"
             type="submit"
             disabled={!isValid || submitting}
+            data-cy="order-submit"
           >
             {submitting ? "Gönderiliyor..." : "SİPARİŞ VER"}
           </button>
 
           {!isValid && (
-            <p className="miniHint">Form tamamlanmadan sipariş veremezsin.</p>
+            <p className="miniHint" data-cy="form-hint">
+              Form tamamlanmadan sipariş veremezsin.
+            </p>
           )}
         </aside>
       </form>
