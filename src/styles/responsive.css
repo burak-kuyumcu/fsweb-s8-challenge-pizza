@@ -1,36 +1,80 @@
-@media (max-width: 900px){
-  .orderLayout{ grid-template-columns: 1fr; }
-  .rowTop{ grid-template-columns: 1fr; }
-  .gridChecks{ grid-template-columns: 1fr 1fr; }
+
+@media (max-width: 900px) {
+
+  .orderLayout { 
+    grid-template-columns: 1fr; 
+  }
+
+  .rowTop { 
+    grid-template-columns: 1fr; 
+  }
+
+  .gridChecks { 
+    grid-template-columns: 1fr 1fr; 
+  }
 }
+
 
 
 @media (max-width: 768px) {
+
   .order-form { grid-template-columns: 1fr; }
   .row-2 { grid-template-columns: 1fr; }
   .ingredients { grid-template-columns: 1fr 1fr; }
+
+
+  .orderLayout { 
+    grid-template-columns: 1fr; 
+  }
+
+  .gridChecks { 
+    grid-template-columns: 1fr 1fr; 
+  }
 }
 
 
 
-@media (max-width: 600px){
+@media (max-width: 600px) {
 
-  html, body{ overflow-x: hidden; }
+  html, body { overflow-x: hidden; }
+  header { width: 100%; }
+  header nav { overflow: visible !important; }
 
-  header{
-     width: 100%; 
- }
+  header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 12px 14px;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    align-items: center;
+  }
+
+  header nav li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  header nav li img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    display: block;
+  }
 
 
-  .aciklama{
+  .aciklama {
     position: relative;
     width: 100%;
     min-height: 100svh;
     height: 100svh;
   }
 
-
-  .aciklama img{
+  .aciklama img {
     width: 100%;
     height: 100%;
     display: block;
@@ -38,8 +82,7 @@
     object-position: center;
   }
 
-
-  .aciklama-logo{
+  .aciklama-logo {
     position: absolute;
     top: 18px;
     left: 50%;
@@ -47,14 +90,13 @@
     z-index: 5;
   }
 
-  .aciklama-logo img{
+  .aciklama-logo img {
     height: 34px;
     width: auto;
     display: block;
   }
 
-
-  .aciklama-content{
+  .aciklama-content {
     position: absolute;
     inset: 0;
     z-index: 4;
@@ -66,56 +108,25 @@
     padding: 0 18px;
   }
 
-  .aciklama-content p{
+  .aciklama-content p {
     font-size: 18px;
     margin: 0 0 10px;
   }
 
-  .aciklama-content h1{
+  .aciklama-content h1 {
     font-size: 44px;
     line-height: 1.05;
     letter-spacing: 1px;
     margin: 0 0 18px;
   }
 
-  .aciklama-content button{
+  .aciklama-content button {
     padding: 12px 34px;
     border-radius: 999px;
   }
 
- 
-  header nav{
-    overflow: visible !important;
-  }
 
-  header nav ul{
-    list-style: none;
-    margin: 0;
-    padding: 12px 14px;
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 12px !important;
-    align-items: center;
-  }
-
-  header nav li{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    font-size: 14px;
-    white-space: nowrap;
-  }
-
-  header nav li img{
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    display: block;
-  }
-
-
-  .resSec{
+  .resSec {
     width: 92% !important;
     margin: 16px auto 24px !important;
 
@@ -130,49 +141,27 @@
     opacity: 1 !important;
   }
 
-  
-  .resSecRight{
+  .resSecRight {
     display: grid !important;
     grid-template-rows: 1fr 1fr !important;
     gap: 16px !important;
     height: auto !important;
   }
 
-  .resSecLeft{
+  .resSecLeft,
+  .resSecRight-first,
+  .resSecRight-second {
     height: 220px !important;
     min-height: 220px !important;
-
     position: relative !important;
     overflow: hidden !important;
     border-radius: 18px !important;
-
-    display: block !important;          
+    display: block !important;
   }
 
-  .resSecRight-first{
-    height: 220px !important;
-    min-height: 220px !important;
-
-    position: relative !important;
-    overflow: hidden !important;
-    border-radius: 18px !important;
-
-    display: block !important;          
-  }
-
-  .resSecRight-second{
-    height: 220px !important;
-    min-height: 220px !important;
-
-    position: relative !important;
-    overflow: hidden !important;
-    border-radius: 18px !important;
-
-    display: block !important;          
-  }
-
-
-  .resSecLeft img{
+  .resSecLeft img,
+  .resSecRight-first img,
+  .resSecRight-second img {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -182,28 +171,9 @@
     object-position: center;
   }
 
-  .resSecRight-first img{
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  .resSecRight-second img{
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-    object-position: center;
-  }
-
-
-  .resSecLeft-content{
+  .resSecLeft-content,
+  .resSecRight-content1,
+  .resSecRight-content2 {
     position: absolute;
     left: 18px !important;
     top: 18px !important;
@@ -214,84 +184,37 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-
     max-width: 75% !important;
   }
 
-  .resSecRight-content1{
-    position: absolute;
-    left: 18px !important;
-    top: 18px !important;
-    right: 18px !important;
-    bottom: 18px !important;
-    z-index: 2;
-
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    max-width: 75% !important;
-  }
-
-  .resSecRight-content2{
-    position: absolute;
-    left: 18px !important;
-    top: 18px !important;
-    right: 18px !important;
-    bottom: 18px !important;
-    z-index: 2;
-
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    max-width: 75% !important;
-  }
-
-  .resSecLeft-content h2{ 
+  .resSecLeft-content h2 {
     font-size: 38px !important;
-     line-height: 1; 
-    }
+    line-height: 1;
+  }
 
-  .resSecRight-content1 h2{ 
+  .resSecRight-content1 h2,
+  .resSecRight-content2 h2 {
     font-size: 22px !important;
-     line-height: 1.15; 
-    }
-
-  .resSecRight-content2 h2{ 
-    font-size: 22px !important;
-     line-height: 1.15; 
-    }
-
-
-  .resSecLeft-content button{
-    margin-top: auto;
-    width: fit-content;
+    line-height: 1.15;
   }
 
-  .resSecRight-content1 button{
-    margin-top: auto;
-    width: fit-content;
-  }
-
-  .resSecRight-content2 button{
+  .resSecLeft-content button,
+  .resSecRight-content1 button,
+  .resSecRight-content2 button {
     margin-top: auto;
     width: fit-content;
   }
 
 
-  .secenekler nav{
+  .secenekler nav {
     width: 92%;
     margin: 0 auto;
-  }
-
-  .secenekler nav{
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
 
-  .secenekler nav a{
+  .secenekler nav a {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -301,7 +224,7 @@
     white-space: nowrap;
   }
 
-  .secenekler nav a img{
+  .secenekler nav a img {
     width: 22px;
     height: 22px;
     object-fit: contain;
@@ -309,22 +232,13 @@
   }
 
 
-  .main-content{
+  .main-content {
     width: 92%;
     margin: 24px auto 10px;
     text-align: center;
   }
 
-  .main-content h3{
-    margin: 0 0 10px;
-  }
-
-  .main-content h2{
-    margin: 0;
-  }
-
- 
-  .urunler{
+  .urunler {
     width: 92%;
     margin: 16px auto;
     display: grid;
@@ -332,47 +246,39 @@
     gap: 18px !important;
   }
 
-  .urun1-content img{
-    height: 200px;
-    width: 100%;
-    object-fit: contain;
-    display: block;
-  }
-  
-  .urun2-content img{
-    height: 200px;
-    width: 100%;
-    object-fit: contain;
-    display: block;
+  .urun1-content img { height: 200px; width: 100%; object-fit: contain; display: block; }
+  .urun2-content img { height: 200px; width: 100%; object-fit: contain; display: block; }
+  .urun3-content img { height: 200px; width: 100%; object-fit: contain; display: block; }
+
+
+
+  .orderLayout {
+    grid-template-columns: 1fr;
+    width: min(720px, 92%);
   }
 
-  .urun3-content img{
-    height: 200px;
-    width: 100%;
-    object-fit: contain;
-    display: block;
+  .gridChecks { 
+    grid-template-columns: 1fr 1fr; 
   }
 
 
-  .footerUp{
+  .footerUp {
     grid-template-columns: 1fr !important;
     gap: 28px !important;
   }
 
-  .solFooter{
+  .solFooter {
     grid-template-columns: 1fr !important;
     gap: 28px !important;
   }
 
-  .igGrid{
+  .igGrid {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .footer-bottom{
+  .footer-bottom {
     flex-direction: column;
     gap: 12px;
     text-align: center;
   }
 }
-
-
