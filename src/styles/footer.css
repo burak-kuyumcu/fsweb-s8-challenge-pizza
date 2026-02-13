@@ -1,8 +1,10 @@
-footer{
+footer {
+  width: 100%;
   background:#1f1f1f;
   color:#fff;
   padding-top: 60px;
 }
+
 
 .footerUp{
   width: min(1100px, 92%);

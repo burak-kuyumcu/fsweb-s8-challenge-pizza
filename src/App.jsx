@@ -30,18 +30,19 @@ export default function App() {
     );
   }
 
-  if (page === "order") {
-    return (
-      <>
-         <OrderHeader />
-         <main className="page">
-         <ProductInfo />
-         <OrderForm onSuccess={handleOrderSuccess} />
-         </main>
-         <Footer />
-      </>
-    );
-  }
+if (page === "order") {
+  return (
+    <>
+      <OrderHeader />
+      <main className="orderPage">
+        <ProductInfo />
+        <OrderForm onSuccess={handleOrderSuccess} />
+      </main>
+      <Footer />
+    </>
+  );
+}
+
 
   return (
     <>

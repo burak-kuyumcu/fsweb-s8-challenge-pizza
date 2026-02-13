@@ -1,8 +1,11 @@
-.orderTop{
-  background:#CE2829;
+.orderTop {
+  width: 100%;
+  background: #CE2829;
   padding: 22px 16px;
-  text-align:center;
+  text-align: center;
 }
+
+
 .orderTop__title{
   margin:0;
   color:#fff;
@@ -66,7 +69,7 @@
   padding: 26px 0 40px;
 }
 .orderLayout{
-  width: min(720px, 92%);
+  width: min(1100px, 92%);
   margin: 0 auto;
   display:grid;
   grid-template-columns: 1fr 300px;
@@ -240,3 +243,14 @@
   color:#777;
   text-align:center;
 }
+
+.orderPage{
+  width: 100%;
+  background: #fff;
+}
+
+.orderPage > *{
+  width: min(1100px, 92%);
+  margin: 0 auto;
+}
+
