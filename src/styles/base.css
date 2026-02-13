@@ -1,0 +1,29 @@
+body {
+  font-family: 'Barlow';
+  margin: 0;
+}
+
+.container{
+  width: min(1100px, 92%);
+  margin: 0 auto;
+}
+
+
+button {
+  border-radius: 12px;
+  border: 1px solid transparent;
+  padding: 1.2em 2em;
+  font-size: 1em;
+  font-weight: 500;
+  background-color: #FDC913;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  color: black;
+}
+
+button:hover { border-color: #646cff; }
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}

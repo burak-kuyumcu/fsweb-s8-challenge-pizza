@@ -1,0 +1,378 @@
+header nav ul{
+  list-style: none;
+  display: flex;             
+  flex-direction: row;        
+  flex-wrap: nowrap;          
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+}
+
+header nav li{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  padding: 18px 20px;
+  font-weight: 500;
+  color: #333;
+}
+
+header nav img{
+  display: block;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.aciklama{
+  position: relative;
+  height: 650px;           
+  overflow: hidden;
+  background: #cf2a2a;     
+}
+
+.aciklama img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;     
+  object-position: center bottom;
+}
+
+.aciklama-logo{
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.aciklama-logo img{
+  height: 44px;
+  width: auto;
+  display: block;
+}
+
+.aciklama-content{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 2;
+  color: #fff;
+  transform: translateY(-8px); 
+}
+
+.aciklama-content p{
+  margin: 0 0 8px;
+  color: #f6c445;
+  font-style: italic;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.aciklama-content h1{
+  margin: 0 0 18px;
+  font-size: 64px;
+  line-height: 1.05;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+.aciklama-content button{
+  background: #f6c445;
+  border: none;
+  padding: 14px 44px;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+
+.resSec{
+  --H: 460px;
+  width: min(1000px, 92%);
+  margin: 50px auto;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 24px;
+}
+
+.resSecLeft{ height: var(--H); }
+
+.resSecRight{
+  height: var(--H);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.resSecLeft,
+.resSecRight-first,
+.resSecRight-second{
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.resSecRight-first,
+.resSecRight-second{
+  flex: 1;
+  min-height: 0;
+}
+
+.resSecLeft img,
+.resSecRight-first img,
+.resSecRight-second img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.resSecLeft{ background:#cf2a2a; }
+.resSecLeft img{
+  object-fit: contain;
+  object-position: 78% 50%;
+  transform: scale(1.06);     
+}
+
+.resSecRight-first{ background:#2b2b2b; }
+
+.resSecRight-second{ 
+  background:#F6E7C9; 
+}
+
+.resSecRight-first img{
+  object-fit: contain;
+  object-position: 72% 50%;
+  transform: scale(1.03);     
+}
+
+.resSecRight-second img{
+  object-fit: contain;
+  object-position: 60% 55%;
+  transform: scale(1.02);     
+}
+
+.resSecLeft-content,
+.resSecRight-content1,
+.resSecRight-content2{
+  position: absolute;
+  left: 32px;
+  top: 32px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resSecLeft-content{ 
+  max-width: 56%;
+  color:#fff; 
+}
+
+.resSecRight-content1{ 
+  max-width: 52%;
+  color:#fff;
+}
+
+.resSecRight-content2{ 
+  max-width: 52%;
+  color:#111;
+}
+
+.resSec h2,
+.resSec h3{ 
+  margin: 0; 
+}
+
+.resSecLeft-content h2{
+  font-size: 64px;
+  line-height: .90;
+}
+
+.resSecLeft-content h3{
+  font-size: 16px;
+  opacity: .95;
+  margin-top: 4px;
+}
+
+.resSecRight-content1 h2{
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.resSecRight-content2 h2{
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.resSecRight-content1 h3{
+  font-size: 18px;
+  opacity: .95;
+}
+
+.resSecRight-content2 h3{
+  font-size: 20px;
+  font-weight: 700;
+  opacity: .9;
+}
+
+.resSec button{
+  background: #fff !important;
+  color: #c62828 !important;
+  border: 1px solid #fff !important;
+  border-radius: 999px !important;
+  padding: 9px 20px !important;
+  font-weight: 800 !important;
+  font-size: 11px !important;
+  letter-spacing: .6px !important;
+  width: fit-content;
+  text-transform: uppercase;
+}
+
+.red{ 
+  color: #ce2829;
+}
+
+
+.secenekler{
+  background: #fff;
+  padding: 14px 0;
+}
+
+.secenekler nav{
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1100px; 
+  margin: 0 auto;
+}
+
+.secenekler nav a{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #f3f3f3;     
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background .2s, color .2s;    
+}
+
+.secenekler nav a img{
+  display: block;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.secenekler nav a.active{
+  background: #1f1f1f;
+  color: #fff;
+}
+
+
+.urunler{
+  width: min(1100px, 92%);
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.urun1,
+.urun2,
+.urun3{
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.urun1-content,
+.urun2-content,
+.urun3-content{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.urun1-content img,
+.urun2-content img,
+.urun3-content img{
+  height: 220px;
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.urun1-content-details h4,
+.urun2-content-details h4,
+.urun3-content-details h4{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.urun1-content-details-numbers,
+.urun2-content-details-numbers,
+.urun3-content-details-numbers{
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.urun1-content-details-numbers p,
+.urun2-content-details-numbers p,
+.urun3-content-details-numbers p{
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.urun1-content-details-numbers p:last-child,
+.urun2-content-details-numbers p:last-child,
+.urun3-content-details-numbers p:last-child{
+  font-size: 18px;
+  font-weight: 800;
+  color: #111;
+}
+
+
+.main-content{
+  text-align: center;
+  margin: 40px 0 26px;
+}
+
+.main-content h3{
+  margin: 0 0 10px;
+  color: #ce2829;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Satisfy", cursive;
+  font-style: normal;
+  letter-spacing: 0.5px;
+}
+
+.main-content h2{
+  margin: 0;
+  font-size: 44px;
+  font-weight: 800;
+  color: #292929;
+}
