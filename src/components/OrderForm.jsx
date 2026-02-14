@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import axios from "axios";
 
 const MALZEMELER = [
@@ -17,24 +17,6 @@ const MALZEMELER = [
   "Kabak",
 ];
 
-const slugify = (s) =>
-  String(s)
-    .trim()
-    .replaceAll("İ", "I")
-    .replaceAll("ı", "i")
-    .replaceAll("Ğ", "G")
-    .replaceAll("ğ", "g")
-    .replaceAll("Ü", "U")
-    .replaceAll("ü", "u")
-    .replaceAll("Ş", "S")
-    .replaceAll("ş", "s")
-    .replaceAll("Ö", "O")
-    .replaceAll("ö", "o")
-    .replaceAll("Ç", "C")
-    .replaceAll("ç", "c")
-    .replace(/\s+/g, "-")
-    .toLowerCase();
-
 export default function OrderForm({ onSuccess }) {
   const [form, setForm] = useState({
     isim: "",
@@ -47,6 +29,7 @@ export default function OrderForm({ onSuccess }) {
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const submitLockRef = useRef(false);
 
   const basePrice = 85.5;
   const ingredientPrice = 5;
@@ -107,6 +90,7 @@ export default function OrderForm({ onSuccess }) {
       adet: 1,
     });
   };
+
   const mockResponse = () => ({
     id: String(Math.floor(Math.random() * 900000 + 100000)),
     createdAt: new Date().toISOString(),
@@ -114,8 +98,11 @@ export default function OrderForm({ onSuccess }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    if (submitLockRef.current) return;
     if (!isValid || submitting) return;
 
+    submitLockRef.current = true;
     setSubmitting(true);
     setSubmitError("");
 
@@ -123,7 +110,10 @@ export default function OrderForm({ onSuccess }) {
 
     try {
       const res = await axios.post("/reqres/api/users", payload, {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "reqres-free-v1",
+        },
         timeout: 20000,
       });
 
@@ -134,9 +124,10 @@ export default function OrderForm({ onSuccess }) {
       resetForm();
     } catch (err) {
       const status = err?.response?.status;
-      if (status === 401 || status === 403 || !err?.response) {
+
+      if (status === 401 || status === 403) {
         const fake = mockResponse();
-        console.warn("API failed, using MOCK response:", { status, fake, err });
+        console.warn("API auth failed, using MOCK response:", { status, fake });
 
         onSuccess?.({ payload, response: fake, mocked: true });
         resetForm();
@@ -146,6 +137,7 @@ export default function OrderForm({ onSuccess }) {
       }
     } finally {
       setSubmitting(false);
+      submitLockRef.current = false;
     }
   };
 
@@ -225,7 +217,6 @@ export default function OrderForm({ onSuccess }) {
                       onChange={() => toggleMalzeme(m)}
                       disabled={disableNew}
                       data-cy={`malzeme-${m}`}
-                      data-cy-safe={`malzeme-${slugify(m)}`}
                     />
                     <span className="box" aria-hidden="true" />
                     <span className="txt">{m}</span>
