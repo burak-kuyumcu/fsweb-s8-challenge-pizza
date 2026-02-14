@@ -5,9 +5,11 @@ const Footer = () => {
         <div className="solFooter">
           <div className="footerBrand">
             <img
-              src="/assets/iteration-2/footer/logo-footer.svg"
-              alt="Teknolojik Yemekler footer logo"
-            />
+  className="footerLogo"
+  src="/assets/iteration-2/footer/logo-footer.svg"
+  alt="Teknolojik Yemekler footer logo"
+/>
+
 
             <ul className="footerContact">
               <li>

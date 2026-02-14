@@ -100,3 +100,15 @@ footer {
   height: 18px;
   display:block;
 }
+.footerBrand .footerLogo{
+  width: 180px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  max-width: 100%;
+}
+.footerBrand{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
