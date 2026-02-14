@@ -39,7 +39,11 @@
   color:#777;
   margin: 6px 0 18px;
 }
-.crumb span{ color:#CE2829; font-weight:700; }
+.crumb span{ 
+  color:#CE2829;
+   font-weight:700; 
+  }
+
 .productTitle{
   margin: 0 0 10px;
   font-size: 18px;
@@ -51,12 +55,18 @@
   align-items:baseline;
   margin-bottom: 10px;
 }
+
 .price{
   font-size: 20px;
   font-weight:800;
   color:#111;
 }
-.muted{ color:#8b8b8b; font-size: 12px; }
+
+.muted{ 
+  color:#8b8b8b; 
+  font-size: 12px; 
+}
+
 .productDesc{
   margin:0;
   color:#777;
@@ -68,6 +78,7 @@
   background:#fff;
   padding: 26px 0 40px;
 }
+
 .orderLayout{
   width: min(1100px, 92%);
   margin: 0 auto;
@@ -76,7 +87,12 @@
   gap: 28px;
   align-items:start;
 }
-.orderLeft{ display:flex; flex-direction:column; gap: 22px; }
+
+.orderLeft{ 
+  display:flex;
+   flex-direction:column;
+    gap: 22px; 
+  }
 
 .rowTop{
   display:grid;
@@ -95,11 +111,26 @@
   color:#777;
 }
 
-.labelRow{ display:flex; align-items:center; gap:6px; margin-bottom: 10px; }
-.labelText{ font-size: 12px; font-weight:700; color:#222; }
+.labelRow{ 
+  display:flex;
+   align-items:center;
+    gap:6px;
+     margin-bottom: 10px;
+ }
+
+.labelText{ 
+  font-size: 12px;
+   font-weight:700;
+    color:#222;
+   }
+
 .req{ color:#CE2829; }
 
-.sizePills{ display:flex; gap: 10px; }
+.sizePills{ 
+  display:flex;
+   gap: 10px;
+   }
+
 .pill{
   width: 34px;
   height: 34px;

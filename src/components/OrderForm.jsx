@@ -30,10 +30,8 @@ export default function OrderForm({ onSuccess }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const submitLockRef = useRef(false);
-
   const basePrice = 85.5;
   const ingredientPrice = 5;
-
   const errors = useMemo(() => {
     const e = {};
     if (form.isim.trim().length < 3) e.isim = "İsim en az 3 karakter olmalı.";
@@ -47,12 +45,9 @@ export default function OrderForm({ onSuccess }) {
   }, [form]);
 
   const isValid = Object.keys(errors).length === 0;
-
   const selectionsTotal = form.malzemeler.length * ingredientPrice;
   const total = (basePrice + selectionsTotal) * form.adet;
-
   const setSize = (s) => setForm((p) => ({ ...p, boyut: s }));
-
   const onChange = (e) => {
     const { name, value } = e.target;
     setForm((p) => ({ ...p, [name]: value }));
@@ -91,55 +86,38 @@ export default function OrderForm({ onSuccess }) {
     });
   };
 
-  const mockResponse = () => ({
-    id: String(Math.floor(Math.random() * 900000 + 100000)),
-    createdAt: new Date().toISOString(),
-  });
-
   const onSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (submitLockRef.current) return;
-    if (!isValid || submitting) return;
+  if (submitLockRef.current) return;
+  if (!isValid || submitting) return;
 
-    submitLockRef.current = true;
-    setSubmitting(true);
-    setSubmitError("");
+  submitLockRef.current = true;
+  setSubmitting(true);
+  setSubmitError("");
 
-    const payload = buildPayload();
+  const payload = buildPayload();
+  const apiKey = import.meta.env.VITE_REQRES_API_KEY || "reqres-free-v1";
 
-    try {
-      const res = await axios.post("/reqres/api/users", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": "reqres-free-v1",
-        },
-        timeout: 20000,
-      });
+  try {
+    const res = await axios.post("/reqres/api/pizza", payload, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+      },
+      timeout: 20000,
+    });
 
-      console.log("API RESPONSE:", res.data);
-      console.log("ORDER SUMMARY:", { payload, response: res.data });
+    onSuccess?.({ payload, response: res.data });
+    resetForm();
+  } catch (err) {
+    setSubmitError("İnternet'e bağlanılamadı. Lütfen tekrar deneyin.");
+  } finally {
+    setSubmitting(false);
+    submitLockRef.current = false;
+  }
+};
 
-      onSuccess?.({ payload, response: res.data, mocked: false });
-      resetForm();
-    } catch (err) {
-      const status = err?.response?.status;
-
-      if (status === 401 || status === 403) {
-        const fake = mockResponse();
-        console.warn("API auth failed, using MOCK response:", { status, fake });
-
-        onSuccess?.({ payload, response: fake, mocked: true });
-        resetForm();
-      } else {
-        setSubmitError("İnternet'e bağlanılamadı / CORS oldu. Lütfen tekrar deneyin.");
-        console.error("API ERROR:", err);
-      }
-    } finally {
-      setSubmitting(false);
-      submitLockRef.current = false;
-    }
-  };
 
   return (
     <section className="orderSection">

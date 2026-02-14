@@ -4,19 +4,12 @@ const Footer = () => {
       <div className="footerUp">
         <div className="solFooter">
           <div className="footerBrand">
-            <img
-  className="footerLogo"
-  src="/assets/iteration-2/footer/logo-footer.svg"
-  alt="Teknolojik Yemekler footer logo"
-/>
+            <img className="footerLogo" src="/assets/iteration-2/footer/logo-footer.svg" alt="Teknolojik Yemekler footer logo"/>
 
 
             <ul className="footerContact">
               <li>
-                <img
-                  src="/assets/iteration-2/footer/icons/icon-1.png"
-                  alt="Adres ikonu"
-                />
+                <img src="/assets/iteration-2/footer/icons/icon-1.png" alt="Adres ikonu"/>
                 <span>
                   341 Londonderry Road,<br />
                   İstanbul Türkiye
@@ -24,18 +17,12 @@ const Footer = () => {
               </li>
 
               <li>
-                <img
-                  src="/assets/iteration-2/footer/icons/icon-2.png"
-                  alt="E-posta ikonu"
-                />
+                <img src="/assets/iteration-2/footer/icons/icon-2.png" alt="E-posta ikonu"/>
                 <span>aciktim@teknolojikyemekler.com</span>
               </li>
 
               <li>
-                <img
-                  src="/assets/iteration-2/footer/icons/icon-3.png"
-                  alt="Telefon ikonu"
-                />
+                <img src="/assets/iteration-2/footer/icons/icon-3.png" alt="Telefon ikonu"/>
                 <span>+90 216 123 45 67</span>
               </li>
             </ul>

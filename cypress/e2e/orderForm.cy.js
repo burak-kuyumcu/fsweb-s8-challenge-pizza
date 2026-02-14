@@ -1,4 +1,3 @@
-
 describe("Order Form - Validasyon", () => {
   const fillMinimumValidForm = ({
     name = "Burak",
@@ -17,9 +16,7 @@ describe("Order Form - Validasyon", () => {
 
   beforeEach(() => {
     cy.visit("/");
-    cy.get('[data-cy="go-order"]', { timeout: 10000 })
-      .should("be.visible")
-      .click();
+    cy.get('[data-cy="go-order"]', { timeout: 10000 }).should("be.visible").click();
   });
 
   it("order sayfası açılınca form ve özet görünmeli", () => {
@@ -48,11 +45,9 @@ describe("Order Form - Validasyon", () => {
     cy.get('[data-cy="name-input"]').type("Burak");
     cy.get('[data-cy="size-M"]').click();
     cy.get('[data-cy="hamur"]').select("İnce");
-
     cy.get('[data-cy="malzeme-Pepperoni"]').check({ force: true });
     cy.get('[data-cy="malzeme-Sosis"]').check({ force: true });
     cy.get('[data-cy="malzeme-Mısır"]').check({ force: true });
-
     cy.get('[data-cy="submit-order"]').should("be.disabled");
     cy.contains("En az 4 malzeme seçmelisin.").should("be.visible");
   });
@@ -65,12 +60,10 @@ describe("Order Form - Validasyon", () => {
   it("hamur seçilmeden hamur hatası görünmeli", () => {
     cy.get('[data-cy="name-input"]').type("Burak");
     cy.get('[data-cy="size-M"]').click();
-
     cy.get('[data-cy="malzeme-Pepperoni"]').check({ force: true });
     cy.get('[data-cy="malzeme-Sosis"]').check({ force: true });
     cy.get('[data-cy="malzeme-Mısır"]').check({ force: true });
     cy.get('[data-cy="malzeme-Ananas"]').check({ force: true });
-
     cy.get('[data-cy="submit-order"]').should("be.disabled");
     cy.contains("Hamur seçmelisin.").should("be.visible");
   });
@@ -78,12 +71,10 @@ describe("Order Form - Validasyon", () => {
   it("boyut seçilmeden boyut hatası görünmeli", () => {
     cy.get('[data-cy="name-input"]').type("Burak");
     cy.get('[data-cy="hamur"]').select("İnce");
-
     cy.get('[data-cy="malzeme-Pepperoni"]').check({ force: true });
     cy.get('[data-cy="malzeme-Sosis"]').check({ force: true });
     cy.get('[data-cy="malzeme-Mısır"]').check({ force: true });
     cy.get('[data-cy="malzeme-Ananas"]').check({ force: true });
-
     cy.get('[data-cy="submit-order"]').should("be.disabled");
     cy.contains("Boyut seçmelisin.").should("be.visible");
   });
@@ -94,16 +85,8 @@ describe("Order Form - Validasyon", () => {
     cy.get('[data-cy="hamur"]').select("İnce");
 
     const list10 = [
-      "Pepperoni",
-      "Sosis",
-      "Mısır",
-      "Sucuk",
-      "Domates",
-      "Soğan",
-      "Biber",
-      "Ananas",
-      "Kabak",
-      "Sarımsak",
+      "Pepperoni","Sosis","Mısır","Sucuk","Domates",
+      "Soğan","Biber","Ananas","Kabak","Sarımsak",
     ];
 
     list10.forEach((m) => cy.get(`[data-cy="malzeme-${m}"]`).check({ force: true }));
@@ -113,9 +96,7 @@ describe("Order Form - Validasyon", () => {
   });
 
   it("fiyat doğru hesaplanmalı", () => {
-
-    fillMinimumValidForm({ size: "M", dough: "İnce", ingredients: ["Pepperoni", "Sosis", "Mısır", "Ananas"] });
-
+    fillMinimumValidForm({ size: "M", dough: "İnce" });
     cy.get('[data-cy="secimler-fiyat"]').should("contain", "20.00");
     cy.get('[data-cy="toplam-fiyat"]').should("contain", "105.50");
   });
@@ -125,7 +106,6 @@ describe("Order Form - Validasyon", () => {
 
     cy.get('[data-cy="sum-total"]').invoke("text").then((t1) => {
       cy.get('[data-cy="qty-inc"]').click();
-
       cy.get('[data-cy="sum-total"]').invoke("text").then((t2) => {
         const n1 = parseFloat(String(t1).replace("₺", "").replace(",", "."));
         const n2 = parseFloat(String(t2).replace("₺", "").replace(",", "."));
@@ -141,7 +121,7 @@ describe("Order Form - Validasyon", () => {
   });
 
   it("sipariş verince POST atılmalı ve body boyut doğru olmalı", () => {
-    cy.intercept("POST", "/reqres/api/users", {
+    cy.intercept("POST", "**/api/pizza", {
       statusCode: 201,
       body: { id: "999", createdAt: "2026-02-14T00:00:00.000Z" },
     }).as("createOrder");
@@ -149,14 +129,13 @@ describe("Order Form - Validasyon", () => {
     fillMinimumValidForm({ size: "M", dough: "Orta" });
 
     cy.get('[data-cy="submit-order"]').click();
-
-    cy.wait("@createOrder")
+    cy.wait("@createOrder", { timeout: 10000 })
       .its("request.body")
       .should("have.property", "boyut", "M");
   });
 
   it("submit'e basınca buton 'Gönderiliyor...' olmalı (intercept delay)", () => {
-    cy.intercept("POST", "/reqres/api/users", (req) => {
+    cy.intercept("POST", "**/api/pizza", (req) => {
       req.reply((res) => {
         res.delay = 800;
         res.send({ id: "123", createdAt: new Date().toISOString() });
@@ -167,43 +146,34 @@ describe("Order Form - Validasyon", () => {
 
     cy.get('[data-cy="submit-order"]').click();
     cy.get('[data-cy="submit-order"]').should("contain", "Gönderiliyor...");
-
-    cy.wait("@createOrderDelayed");
+    cy.wait("@createOrderDelayed", { timeout: 15000 });
   });
-  
-it("POST başarısız olunca hata mesajı görünmeli (intercept fail)", () => {
-  cy.intercept("POST", "/reqres/api/users", {
-    statusCode: 500,
-    body: { error: "server down" },
-  }).as("createOrderFail");
 
-  fillMinimumValidForm(); 
+  it("POST 500 olunca hata mesajı görünmeli", () => {
+    cy.intercept("POST", "**/api/pizza", {
+      statusCode: 500,
+      body: { error: "server down" },
+    }).as("createOrderFail");
 
-  cy.get('[data-cy="submit-order"]').should("not.be.disabled").click();
-
-  cy.wait("@createOrderFail");
-
-  cy.get('[data-cy="submit-error"]', { timeout: 10000 })
-    .should("be.visible")
-    .and("contain", "İnternet'e bağlanılamadı");
-});
-
+    fillMinimumValidForm();
+    cy.get('[data-cy="submit-order"]').click();
+    cy.wait("@createOrderFail", { timeout: 10000 });
+    cy.get('[data-cy="submit-error"]', { timeout: 10000 })
+      .should("be.visible")
+      .and("contain", "İnternet'e bağlanılamadı");
+  });
 
   it("form doğru doldurulunca success ekranına geçmeli", () => {
-    cy.intercept("POST", "/reqres/api/users", {
+    cy.intercept("POST", "**/api/pizza", {
       statusCode: 201,
       body: { id: "999", createdAt: "2026-02-14T00:00:00.000Z" },
     }).as("createOrder");
 
     fillMinimumValidForm({ size: "L", dough: "Orta" });
 
-    cy.get('[data-cy="submit-order"]').should("not.be.disabled").click();
-    cy.wait("@createOrder");
-
+    cy.get('[data-cy="submit-order"]').click();
+    cy.wait("@createOrder", { timeout: 10000 });
     cy.get('[data-cy="success-title"]', { timeout: 10000 })
       .should("contain", "SİPARİŞ ALINDI");
   });
 });
-
-
-

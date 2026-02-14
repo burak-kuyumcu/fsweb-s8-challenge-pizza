@@ -51,7 +51,11 @@ footer {
   margin-top: 2px;
 }
 
-.footerMenu h3,
+.footerMenu h3{
+  margin: 10px 0 18px;
+  font-size: 20px;
+}
+
 .sagFooter h3{
   margin: 10px 0 18px;
   font-size: 20px;
@@ -93,7 +97,9 @@ footer {
   font-size: 14px;
 }
 
-.footer-bottom p{ margin: 0; }
+.footer-bottom p{ 
+  margin: 0; 
+}
 
 .footer-bottom .social img{
   width: 18px;

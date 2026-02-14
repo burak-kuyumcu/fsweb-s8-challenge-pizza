@@ -1,11 +1,9 @@
 export default function OrderSuccess({ order, onBackHome }) {
   const payload = order?.payload || {};
   const response = order?.response || {};
-
   const boyut = payload.boyut || "-";
   const hamur = payload.hamur || "-";
   const malzemeler = Array.isArray(payload.malzemeler) ? payload.malzemeler : [];
-
   const secimlerFiyati = typeof payload.secimlerFiyati === "number" ? payload.secimlerFiyati : 0;
   const toplam = typeof payload.toplam === "number" ? payload.toplam : 0;
 
