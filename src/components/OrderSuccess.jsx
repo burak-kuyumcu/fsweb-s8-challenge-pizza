@@ -133,13 +133,12 @@ export default function OrderSuccess({ order, onBackHome }) {
 
         <div style={{ marginTop: 26, display: "flex", justifyContent: "center" }}>
           <button
-            type="button"
-            className="success-btn"
-            onClick={onBackHome}
-            data-cy="success-back-home"
-          >
+          type="button"
+          className="success-btn"
+          onClick={onBackHome}
+          data-cy="back-home">
             ANASAYFAYA DÖN
-          </button>
+            </button>
         </div>
       </div>
     </div>
