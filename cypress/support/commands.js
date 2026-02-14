@@ -23,3 +23,11 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add("fillValidOrder", (size="M", dough="İnce") => {
+  cy.get(`[data-cy="size-${size}"]`).click();
+  cy.get('[data-cy="hamur"]').select(dough);
+  cy.get('[data-cy="malzeme-Pepperoni"]').check({ force: true });
+  cy.get('[data-cy="malzeme-Sosis"]').check({ force: true });
+  cy.get('[data-cy="malzeme-Mısır"]').check({ force: true });
+  cy.get('[data-cy="malzeme-Ananas"]').check({ force: true });
+});

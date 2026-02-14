@@ -6,8 +6,7 @@ export default function OrderSuccess({ order, onBackHome }) {
   const hamur = payload.hamur || "-";
   const malzemeler = Array.isArray(payload.malzemeler) ? payload.malzemeler : [];
 
-  const secimlerFiyati =
-    typeof payload.secimlerFiyati === "number" ? payload.secimlerFiyati : 0;
+  const secimlerFiyati = typeof payload.secimlerFiyati === "number" ? payload.secimlerFiyati : 0;
   const toplam = typeof payload.toplam === "number" ? payload.toplam : 0;
 
   return (
@@ -33,10 +32,7 @@ export default function OrderSuccess({ order, onBackHome }) {
         SİPARİŞ ALINDI
       </h2>
 
-      <div
-        data-cy="success-content"
-        style={{ width: "min(820px, 92%)", marginTop: 26 }}
-      >
+      <div data-cy="success-content" style={{ width: "min(820px, 92%)", marginTop: 26 }}>
         <div
           data-cy="success-divider"
           style={{
@@ -46,10 +42,7 @@ export default function OrderSuccess({ order, onBackHome }) {
           }}
         />
 
-        <h3
-          data-cy="success-product"
-          style={{ textAlign: "center", margin: "0 0 22px" }}
-        >
+        <h3 data-cy="success-product" style={{ textAlign: "center", margin: "0 0 22px" }}>
           Position Absolute Acı Pizza
         </h3>
 
@@ -71,19 +64,12 @@ export default function OrderSuccess({ order, onBackHome }) {
           </div>
 
           <div data-cy="success-ingredients" style={{ marginTop: 8 }}>
-            Ek Malzemeler:{" "}
-            <b>{malzemeler.length ? malzemeler.join(", ") : "-"}</b>
+            Ek Malzemeler: <b>{malzemeler.length ? malzemeler.join(", ") : "-"}</b>
           </div>
 
           {response?.id && (
             <div data-cy="success-order-no" style={{ marginTop: 10, opacity: 0.9 }}>
               Sipariş No: <b>{response.id}</b>
-            </div>
-          )}
-
-          {order?.mocked && (
-            <div data-cy="success-mocked" style={{ marginTop: 8, opacity: 0.85 }}>
-              (Mock yanıt)
             </div>
           )}
         </div>
@@ -99,10 +85,7 @@ export default function OrderSuccess({ order, onBackHome }) {
             background: "rgba(0,0,0,0.12)",
           }}
         >
-          <h4
-            data-cy="success-summary-title"
-            style={{ margin: "0 0 14px", textAlign: "center" }}
-          >
+          <h4 data-cy="success-summary-title" style={{ margin: "0 0 14px", textAlign: "center" }}>
             Sipariş Toplamı
           </h4>
 
@@ -133,12 +116,13 @@ export default function OrderSuccess({ order, onBackHome }) {
 
         <div style={{ marginTop: 26, display: "flex", justifyContent: "center" }}>
           <button
-          type="button"
-          className="success-btn"
-          onClick={onBackHome}
-          data-cy="back-home">
+            type="button"
+            className="success-btn"
+            onClick={onBackHome}
+            data-cy="back-home"
+          >
             ANASAYFAYA DÖN
-            </button>
+          </button>
         </div>
       </div>
     </div>

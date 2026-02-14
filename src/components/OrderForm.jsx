@@ -17,12 +17,31 @@ const MALZEMELER = [
   "Kabak",
 ];
 
+const slugify = (s) =>
+  String(s)
+    .trim()
+    .replaceAll("İ", "I")
+    .replaceAll("ı", "i")
+    .replaceAll("Ğ", "G")
+    .replaceAll("ğ", "g")
+    .replaceAll("Ü", "U")
+    .replaceAll("ü", "u")
+    .replaceAll("Ş", "S")
+    .replaceAll("ş", "s")
+    .replaceAll("Ö", "O")
+    .replaceAll("ö", "o")
+    .replaceAll("Ç", "C")
+    .replaceAll("ç", "c")
+    .replace(/\s+/g, "-")
+    .toLowerCase();
+
 export default function OrderForm({ onSuccess }) {
   const [form, setForm] = useState({
+    isim: "",
     boyut: "",
     hamur: "",
     malzemeler: [],
-    not: "",
+    ozel: "",
     adet: 1,
   });
 
@@ -31,25 +50,10 @@ export default function OrderForm({ onSuccess }) {
 
   const basePrice = 85.5;
   const ingredientPrice = 5;
-  const slugify = (s) =>
-    String(s)
-      .trim()
-      .replaceAll("İ", "I")
-      .replaceAll("ı", "i")
-      .replaceAll("Ğ", "G")
-      .replaceAll("ğ", "g")
-      .replaceAll("Ü", "U")
-      .replaceAll("ü", "u")
-      .replaceAll("Ş", "S")
-      .replaceAll("ş", "s")
-      .replaceAll("Ö", "O")
-      .replaceAll("ö", "o")
-      .replaceAll("Ç", "C")
-      .replaceAll("ç", "c")
-      .replaceAll(" ", "-");
 
   const errors = useMemo(() => {
     const e = {};
+    if (form.isim.trim().length < 3) e.isim = "İsim en az 3 karakter olmalı.";
     if (!form.boyut) e.boyut = "Boyut seçmelisin.";
     if (!form.hamur) e.hamur = "Hamur seçmelisin.";
 
@@ -60,8 +64,10 @@ export default function OrderForm({ onSuccess }) {
   }, [form]);
 
   const isValid = Object.keys(errors).length === 0;
+
   const selectionsTotal = form.malzemeler.length * ingredientPrice;
   const total = (basePrice + selectionsTotal) * form.adet;
+
   const setSize = (s) => setForm((p) => ({ ...p, boyut: s }));
 
   const onChange = (e) => {
@@ -81,10 +87,11 @@ export default function OrderForm({ onSuccess }) {
   const inc = () => setForm((p) => ({ ...p, adet: p.adet + 1 }));
 
   const buildPayload = () => ({
+    isim: form.isim.trim(),
     boyut: form.boyut,
     hamur: form.hamur,
     malzemeler: form.malzemeler,
-    not: form.not,
+    ozel: form.ozel,
     adet: form.adet,
     secimlerFiyati: selectionsTotal,
     toplam: total,
@@ -92,16 +99,16 @@ export default function OrderForm({ onSuccess }) {
 
   const resetForm = () => {
     setForm({
+      isim: "",
       boyut: "",
       hamur: "",
       malzemeler: [],
-      not: "",
+      ozel: "",
       adet: 1,
     });
   };
-
-  const buildMockResponse = () => ({
-    id: String(Date.now()),
+  const mockResponse = () => ({
+    id: String(Math.floor(Math.random() * 900000 + 100000)),
     createdAt: new Date().toISOString(),
   });
 
@@ -115,19 +122,28 @@ export default function OrderForm({ onSuccess }) {
     const payload = buildPayload();
 
     try {
-      const res = await axios.post("https://reqres.in/api/users", payload, {
+      const res = await axios.post("/reqres/api/users", payload, {
         headers: { "Content-Type": "application/json" },
-        timeout: 8000,
+        timeout: 20000,
       });
+
+      console.log("API RESPONSE:", res.data);
+      console.log("ORDER SUMMARY:", { payload, response: res.data });
 
       onSuccess?.({ payload, response: res.data, mocked: false });
       resetForm();
     } catch (err) {
-      const mock = buildMockResponse();
-      setSubmitError("İnternet'e bağlanılamadı / CORS oldu. Mock yanıt ile devam edildi.");
+      const status = err?.response?.status;
+      if (status === 401 || status === 403 || !err?.response) {
+        const fake = mockResponse();
+        console.warn("API failed, using MOCK response:", { status, fake, err });
 
-      onSuccess?.({ payload, response: mock, mocked: true });
-      resetForm();
+        onSuccess?.({ payload, response: fake, mocked: true });
+        resetForm();
+      } else {
+        setSubmitError("İnternet'e bağlanılamadı / CORS oldu. Lütfen tekrar deneyin.");
+        console.error("API ERROR:", err);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -135,7 +151,7 @@ export default function OrderForm({ onSuccess }) {
 
   return (
     <section className="orderSection">
-      <form className="orderLayout" onSubmit={onSubmit} noValidate>
+      <form className="orderLayout" onSubmit={onSubmit} noValidate data-cy="order-form">
         <div className="orderLeft">
           <div className="rowTop">
             <div className="block">
@@ -149,7 +165,7 @@ export default function OrderForm({ onSuccess }) {
                   <button
                     key={s}
                     type="button"
-                    data-cy={`size-${s}`}              
+                    data-cy={`size-${s}`}
                     className={`pill ${form.boyut === s ? "isActive" : ""}`}
                     onClick={() => setSize(s)}
                     aria-pressed={form.boyut === s}
@@ -168,13 +184,7 @@ export default function OrderForm({ onSuccess }) {
                 <span className="req">*</span>
               </div>
 
-              <select
-                className="select2"
-                name="hamur"
-                value={form.hamur}
-                onChange={onChange}
-                data-cy="hamur"                     
-              >
+              <select className="select2" name="hamur" value={form.hamur} onChange={onChange} data-cy="hamur">
                 <option value="">Hamur Kalınlığı Seç</option>
                 <option value="İnce">İnce</option>
                 <option value="Orta">Orta</option>
@@ -186,6 +196,19 @@ export default function OrderForm({ onSuccess }) {
           </div>
 
           <div className="block">
+            <h3 className="h3">İsim</h3>
+            <input
+              className="noteInput"
+              name="isim"
+              value={form.isim}
+              onChange={onChange}
+              placeholder="Adınız (en az 3 karakter)"
+              data-cy="name-input"
+            />
+            {errors.isim && <p className="err">{errors.isim}</p>}
+          </div>
+
+          <div className="block">
             <h3 className="h3">Ek Malzemeler</h3>
             <p className="hint2">En fazla 10 malzeme seçebilirsiniz. 5₺</p>
 
@@ -193,8 +216,6 @@ export default function OrderForm({ onSuccess }) {
               {MALZEMELER.map((m) => {
                 const checked = form.malzemeler.includes(m);
                 const disableNew = !checked && form.malzemeler.length >= 10;
-                const cyClassic = `malzeme-${m}`;          
-                const cySafe = `malzeme-${slugify(m)}`;    
 
                 return (
                   <label key={m} className="checkItem">
@@ -203,8 +224,8 @@ export default function OrderForm({ onSuccess }) {
                       checked={checked}
                       onChange={() => toggleMalzeme(m)}
                       disabled={disableNew}
-                      data-cy={cyClassic}                
-                      data-cy-safe={cySafe}              
+                      data-cy={`malzeme-${m}`}
+                      data-cy-safe={`malzeme-${slugify(m)}`}
                     />
                     <span className="box" aria-hidden="true" />
                     <span className="txt">{m}</span>
@@ -218,17 +239,19 @@ export default function OrderForm({ onSuccess }) {
 
           <div className="block">
             <h3 className="h3">Sipariş Notu</h3>
-            <input
+            <textarea
               className="noteInput"
-              name="not"
-              value={form.not}
+              name="ozel"
+              value={form.ozel}
               onChange={onChange}
               placeholder="Siparişine eklemek istediğin bir not var mı?"
               data-cy="order-note"
+              rows={3}
             />
           </div>
 
           <div className="divider" />
+
           <div className="bottomRow">
             <div className="qty">
               <button type="button" className="qtyBtn" onClick={dec} data-cy="qty-dec">
@@ -244,24 +267,32 @@ export default function OrderForm({ onSuccess }) {
           </div>
         </div>
 
-        <aside className="orderRight">
+        <aside className="orderRight" data-cy="order-summary">
           <h3 className="sumTitle">Sipariş Toplamı</h3>
+
           <div className="sumRow">
             <span>Seçimler</span>
             <span data-cy="sum-selections">{(selectionsTotal * form.adet).toFixed(2)}₺</span>
+            <span data-cy="secimler-fiyat" style={{ display: "none" }}>
+              {(selectionsTotal * form.adet).toFixed(2)}
+            </span>
           </div>
 
           <div className="sumRow totalRow">
             <span>Toplam</span>
             <span data-cy="sum-total">{total.toFixed(2)}₺</span>
+            <span data-cy="toplam-fiyat" style={{ display: "none" }}>
+              {total.toFixed(2)}
+            </span>
           </div>
-          {submitError && <p className="err" data-cy="submit-error">{submitError}</p>}
-          <button
-            className="orderBtn"
-            type="submit"
-            disabled={!isValid || submitting}
-            data-cy="submit-order"                
-          >
+
+          {submitError && (
+            <p className="err" data-cy="submit-error">
+              {submitError}
+            </p>
+          )}
+
+          <button className="orderBtn" type="submit" disabled={!isValid || submitting} data-cy="submit-order">
             {submitting ? "Gönderiliyor..." : "SİPARİŞ VER"}
           </button>
 
